@@ -1,3 +1,15 @@
+#include<iostream>
+using namespace std;
+#include<vector>
+#include<algorithm>
+#include<numeric>
+#include<limits.h>
+#include<queue>
+#include<set>
+#include<unordered_map>
+#include<bits/stdc++.h>
+#define ll long long int
+
 int main(){
     string s;
     cin>>s;
