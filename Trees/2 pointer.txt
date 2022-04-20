@@ -1,0 +1,208 @@
+//167. Two Sum II - Input Array Is Sorted
+
+vector<int> twoSum(vector<int>& numbers, int target) {
+        int i=0, j=numbers.size()-1;
+        vector<int>v;
+        while(i<j){
+            if(target > numbers[i]+numbers[j])
+                i++;
+            else if(target< numbers[i]+numbers[j])
+                j--;
+            else{
+                v.push_back(i+1);
+                v.push_back(j+1);
+                break;
+            }
+        }
+        return v;
+    }
+
+//125. Valid Palindrome
+bool isPalindrome(string s) {
+        string r=""; 
+        for(int i=0;i<s.length();i++){    
+            int x = s[i]-'0';
+            if( (tolower(s[i])>=97 &&  tolower(s[i])<=122) || (x>=0 && x<=9) )
+                r+=tolower(s[i]);
+        }
+        int n=r.length();
+        int i=0, j=n-1;
+        if(n==0 || n==1)
+            return true;
+        while(i<j){
+            if(r[i]!=r[j])
+                return false;
+            i+=1;
+            j-=1;
+        }
+        return true;
+        
+    }
+
+//15. 3Sum
+Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
+
+Notice that the solution set must not contain duplicate triplets.
+
+TLE :
+vector<vector<int>> threeSum(vector<int>& nums) {
+        unordered_map<int,int>m;
+        int count=0;
+        set<vector<int>>s;
+        for(auto x: nums)
+            m[x]++;
+        int n = nums.size();
+        for(int i=0;i<n-1;i++){
+            m[nums[i]]--;
+            for(int j=i+1;j<n;j++){
+                m[nums[j]]--;
+                int c = -nums[i]-nums[j];
+                if(m[c]>=1)
+                {
+                    vector<int>x;
+                    x.push_back(nums[i]);
+                    x.push_back(nums[j]);
+                    x.push_back(c);
+                    sort(x.begin(),x.end());
+                    s.insert(x);
+                }
+                m[nums[j]]++;
+            }
+            m[nums[i]]++;
+        }
+        vector<vector<int>>res;
+        for(auto vec : s)
+            res.push_back(vec);
+        return res;
+    }
+
+
+2 pointer :
+
+ vector<vector<int>> threeSum(vector<int>& nums) {
+       
+        sort(nums.begin(),nums.end());
+        vector<vector<int>>res;
+        int n = nums.size();
+        for(int i=0;i<n-2;i++){
+            if(i==0 || (i>0 && nums[i]!=nums[i-1])){
+                int lo = i+1;
+                int hi = n-1;
+                int sum = 0-nums[i];
+                while(lo<hi){
+                    if(nums[lo]+nums[hi]==sum){
+                        vector<int>x;
+                        int b = nums[lo];
+                        int c = nums[hi];
+                        x.push_back(nums[i]);
+                        x.push_back(b);
+                        x.push_back(c);
+                        res.push_back(x);
+                       
+                        while(lo<hi && nums[lo]==nums[lo+1]) lo++;
+                        while(lo<hi && nums[hi]==nums[hi-1]) hi--;
+                        
+                        lo++;
+                        hi--;
+                    }
+                    
+                    else if(nums[lo]+nums[hi]<sum)
+                        lo++;
+                    else 
+                        hi--;
+                }
+            }
+        }
+        return res;
+    }
+
+ 
+//923. 3Sum With Multiplicity
+Given an integer array arr, and an integer target, return the number of tuples i, j, k such that i < j < k and arr[i] + arr[j] + arr[k] == target.
+
+As the answer can be very large, return it modulo 109 + 7.
+
+Basically 3sum, find the unique vectors and count the frequencies, like nc2,nc3,nc1.
+
+#define ll long long int
+class Solution {
+public:
+    int mod = 1e9+7;
+     int threeSumMulti(vector<int>& nums, int target) {
+         ll count = 0;
+         unordered_map<int,ll>m;
+         for(auto x : nums)
+             m[x]++;
+        sort(nums.begin(),nums.end());
+        vector<vector<int>>res;
+        int n = nums.size();
+        for(int i=0;i<n-2;i++){
+            if(i==0 || (i>0 && nums[i]!=nums[i-1])){
+                int lo = i+1;
+                int hi = n-1;
+                int sum = target-nums[i];
+                while(lo<hi){
+                    if(nums[lo]+nums[hi]==sum){
+                
+                        if(nums[lo]==nums[hi]&& nums[lo] == nums[i]){
+                            count=count%mod;
+                            ll add = ((m[nums[i]]*(m[nums[i]]-1)*(m[nums[i]]-2))/6)%mod;   //freqC3 = freq*(freq-1)*(freq-2)/6
+                            count+=add;
+                        }
+                            
+                        else if(nums[i]==nums[lo] && nums[i]!=nums[hi])
+                        {
+                            count=count%mod;
+                            ll add = ((m[nums[i]]*(m[nums[i]]-1)*m[nums[hi]])/2)%mod;    //freqC2 = freq*(freq-1)/2
+                            count+=add;
+                        }
+                        else if(nums[lo]==nums[hi] && nums[i]!=nums[hi])
+                        {
+                            count=count%mod;
+                            ll add=((m[nums[lo]]*(m[nums[lo]]-1)*m[nums[i]])/2)%mod;
+                            count+=add;
+                        }
+            
+                        else if(nums[i]<nums[lo] && nums[lo]<nums[hi])
+                        {
+                            count=count%mod;
+                            ll add=(m[nums[i]]*m[nums[lo]]*m[nums[hi]])%mod;
+                            count+=add;
+                        }
+                        while(lo<hi && nums[lo]==nums[lo+1]) lo++;
+                        while(lo<hi && nums[hi]==nums[hi-1]) hi--;
+                        
+                        lo++;
+                        hi--;
+                    }
+                    
+                    else if(nums[lo]+nums[hi]<sum)
+                        lo++;
+                    else 
+                        hi--;
+                }
+            }
+        }
+        return count;
+     }
+};
+
+//11. Container With Most Water
+You are given an integer array height of length n. There are n vertical lines drawn such that the two endpoints of the ith line are (i, 0) and (i, height[i]).
+Find two lines that together with the x-axis form a container, such that the container contains the most water.
+
+Return the maximum amount of water a container can store.
+
+int maxArea(vector<int>& height) {
+        int i=0, j=height.size()-1;
+        int area=0;
+        while(i<j){
+            area=max(area, (min(height[i],height[j])*(j-i)) );
+            if(height[i]<height[j])
+                i++;
+            else
+                j--;
+        }
+        return area;
+    }
+
