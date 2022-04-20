@@ -4,16 +4,10 @@ public:
         if(!root1 && !root2)
             return NULL;
         else if(root1 && !root2){
-            TreeNode* temp = new TreeNode(root1->val);
-            temp->left = solve(root1->left, NULL);
-            temp->right = solve(root1->right, NULL);
-            return temp;
+            return root1;
         }
         else if(root2 && !root1){
-            TreeNode* temp = new TreeNode(root2->val);
-            temp->left = solve(NULL, root2->left);
-            temp->right = solve(NULL, root2->right);
-            return temp;
+            return root2;
         }
         else{
             TreeNode* temp = new TreeNode(root1->val+root2->val);
