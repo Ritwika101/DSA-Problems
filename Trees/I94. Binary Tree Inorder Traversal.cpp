@@ -1,17 +1,16 @@
-class Solution
-{
-    public:
-    vector<int>v;
-    vector<int> inOrder(Node* root)
-    {
-      // Your code here
-        if(root)
-        {
-            inOrder(root->left);
-            v.push_back(root->data);
-            inOrder(root->right);
-        }
-        return v;
-     
+class Solution {
+public:
+    void inorder(TreeNode* root, vector<int>&res){
+        if(!root)
+            return;
+        inorder(root->left, res);
+        res.push_back(root->val);
+        inorder(root->right,res);
+        return;
+    }
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int>res;
+        inorder(root,res);
+        return res;
     }
 };
