@@ -1,3 +1,5 @@
+
+//For positive numbers
 #include<iostream>
 using namespace std;
 #include<vector>
