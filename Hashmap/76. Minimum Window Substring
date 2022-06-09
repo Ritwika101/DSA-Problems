@@ -1,0 +1,35 @@
+string minWindow(string s, string t) {
+        unordered_map<char,int>m1;
+        unordered_map<char,int>m2;
+        int n=t.size();
+        if(n>s.size()) return "";
+        for(int i=0;i<n;i++)
+            m1[t[i]]++;
+        int need=t.size();
+        int have=0;
+        int ans=INT_MAX;
+        string res="";
+        int rel=0;
+        for(int acq=0;acq<s.size();acq++){
+            m2[s[acq]]++;
+            if(m2[s[acq]]<=m1[s[acq]] && m2[s[acq]]>0)
+                have++;
+            while(rel<acq && have>=need){
+                if(ans>acq-rel+1){
+                    ans=acq-rel+1;
+                    res=s.substr(rel,acq-rel+1);
+                }
+                if(m2[s[rel]]<=m1[s[rel]] && m2[s[rel]]>0)
+                    have--;
+                m2[s[rel]]--;
+                rel++;  
+            }
+            if(have>=need){
+                if(ans>acq-rel+1){
+                    ans=acq-rel+1;
+                    res=s.substr(rel,acq-rel+1);
+                }
+            }
+        }
+        return res;
+    }
